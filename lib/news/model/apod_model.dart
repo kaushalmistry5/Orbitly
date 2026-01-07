@@ -14,18 +14,25 @@ class ApodModel {
   });
 
   factory ApodModel.fromNasaItem(Map<String, dynamic> item) {
-    final List dataList = item['data'] is List ? item['data'] : const [];
-    final List linksList = item['links'] is List ? item['links'] : const [];
+    final List dataList =
+        item['data'] is List ? item['data'] as List : const [];
+    final List linksList =
+        item['links'] is List ? item['links'] as List : const [];
+
+    if (dataList.isEmpty || linksList.isEmpty) {
+      return ApodModel(
+        imageUrl: '',
+        title: 'NASA Image',
+        description: '',
+        date: '',
+        center: 'NASA',
+      );
+    }
 
     final Map<String, dynamic> data =
-        dataList.isNotEmpty && dataList.first is Map
-            ? Map<String, dynamic>.from(dataList.first)
-            : const {};
-
+        Map<String, dynamic>.from(dataList.first);
     final Map<String, dynamic> link =
-        linksList.isNotEmpty && linksList.first is Map
-            ? Map<String, dynamic>.from(linksList.first)
-            : const {};
+        Map<String, dynamic>.from(linksList.first);
 
     return ApodModel(
       imageUrl: (link['href'] ?? '').toString(),

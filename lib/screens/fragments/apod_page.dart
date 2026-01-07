@@ -6,16 +6,18 @@ import 'package:orbitly/controller/apod_controller.dart';
 import 'package:orbitly/news/model/apod_model.dart';
 
 class ApodFragment extends StatelessWidget {
+  ApodFragment({super.key});
+
   final ApodController controller = Get.put(
     ApodController(),
+    permanent: true,
   );
-
-  // if (controller.apod.value == null && !controller.isLoading.value) {
-  // Future.microtask(() => controller.fetchApod());
-  // }
 
   @override
   Widget build(BuildContext context) {
+    if (controller.apod.value == null && !controller.isLoading.value) {
+      Future.microtask(() => controller.fetchApod());
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F0F),
