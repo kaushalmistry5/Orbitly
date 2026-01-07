@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:orbitly/screens/home_screen.dart';
 
 void main() {
-  runApp(const OrbitlyApp());
+  runApp(const MyApp());
 }
 
-class OrbitlyApp extends StatelessWidget {
-  const OrbitlyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

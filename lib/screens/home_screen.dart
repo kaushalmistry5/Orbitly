@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'fragments/apod_fragment.dart';
-import 'fragments/news_fragment.dart';
-import 'fragments/profile_fragment.dart';
-import 'fragments/settings_fragment.dart';
+import 'package:orbitly/screens/fragments/apod_page.dart';
+import 'package:orbitly/screens/fragments/news_page.dart';
+import 'fragments/profile_page.dart';
+import 'fragments/settings_page.dart';
 
 class HomeNavController extends GetxController {
   final currentIndex = 0.obs;
@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
       () => Scaffold(
         body: IndexedStack(
           index: controller.currentIndex.value,
-          children: const [
+          children: [
             NewsFragment(),
             ApodFragment(),
             ProfileFragment(),
