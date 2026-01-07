@@ -44,7 +44,7 @@ class ApodFragment extends StatelessWidget {
               Obx(() {
                 if (controller.isLoading.value) {
                   return Container(
-                    height: 220,
+                    height: 260,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1A1A),
@@ -58,7 +58,7 @@ class ApodFragment extends StatelessWidget {
 
                 if (controller.error.isNotEmpty) {
                   return Container(
-                    height: 220,
+                    height: 260,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1A1A),
@@ -90,28 +90,41 @@ class ApodFragment extends StatelessWidget {
                   return _imagePlaceholder('Today\'s APOD is not an image');
                 }
 
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    Uri.encodeFull(
-                      apod.imageUrl.startsWith('http://')
-                          ? apod.imageUrl.replaceFirst('http://', 'https://')
-                          : apod.imageUrl,
+                return Container(
+                  height: 260,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.6),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      Uri.encodeFull(
+                        apod.imageUrl.startsWith('http://')
+                            ? apod.imageUrl.replaceFirst('http://', 'https://')
+                            : apod.imageUrl,
+                      ),
+                      height: 260,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      headers: const {
+                        'User-Agent': 'Mozilla/5.0',
+                        'Accept': 'image/*',
+                      },
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return _imageLoader();
+                      },
+                      errorBuilder: (_, __, ___) {
+                        return _imagePlaceholder('Unable to load image');
+                      },
                     ),
-                    height: 220,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    headers: const {
-                      'User-Agent': 'Mozilla/5.0',
-                      'Accept': 'image/*',
-                    },
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return _imageLoader();
-                    },
-                    errorBuilder: (_, __, ___) {
-                      return _imagePlaceholder('Unable to load image');
-                    },
                   ),
                 );
               }),
@@ -143,28 +156,6 @@ class ApodFragment extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // SECONDARY BUTTON
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 52),
-                  side: const BorderSide(color: Color(0xFF6C5CE7)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                onPressed: () {},
-                icon: const Icon(Icons.menu_book),
-                label: Text(
-                  'Read More',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
 
               // TITLE
               Obx(() {
@@ -183,7 +174,7 @@ class ApodFragment extends StatelessWidget {
 
               // META
               Text(
-                'Date: ${controller.apod.value?.date ?? ''}',
+                'Date: ${_formatDate(controller.apod.value?.date)}',
                 style: GoogleFonts.poppins(
                   color: Colors.grey,
                   fontSize: 14,
@@ -205,7 +196,7 @@ class ApodFragment extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Text(
-                    controller.apod.value?.description ?? '',
+                    _cleanDescription(controller.apod.value?.description),
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 15.5,
@@ -224,7 +215,7 @@ class ApodFragment extends StatelessWidget {
 
 Widget _imageLoader() {
   return Container(
-    height: 220,
+    height: 260,
     width: double.infinity,
     decoration: BoxDecoration(
       color: const Color(0xFF1A1A1A),
@@ -236,7 +227,7 @@ Widget _imageLoader() {
 
 Widget _imagePlaceholder(String text) {
   return Container(
-    height: 220,
+    height: 260,
     width: double.infinity,
     decoration: BoxDecoration(
       color: const Color(0xFF1A1A1A),
@@ -250,4 +241,33 @@ Widget _imagePlaceholder(String text) {
       ),
     ),
   );
+}
+
+String _formatDate(String? rawDate) {
+  if (rawDate == null || rawDate.isEmpty) return 'Unknown';
+
+  try {
+    final dateTime = DateTime.parse(rawDate);
+    return '${dateTime.day} ${_monthName(dateTime.month)} ${dateTime.year}';
+  } catch (_) {
+    return rawDate;
+  }
+}
+
+String _monthName(int month) {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return months[month - 1];
+}
+
+String _cleanDescription(String? description) {
+  if (description == null || description.trim().isEmpty) {
+    return 'No description available for this NASA image.';
+  }
+
+  return description
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
 }
