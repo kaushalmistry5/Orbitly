@@ -262,6 +262,7 @@ String _monthName(int month) {
   return months[month - 1];
 }
 
+
 String _cleanDescription(String? description) {
   if (description == null || description.trim().isEmpty) {
     return 'No description available for this NASA image.';
