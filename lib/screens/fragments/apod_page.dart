@@ -155,8 +155,6 @@ class ApodFragment extends StatelessWidget {
               ),
 
               const SizedBox(height: 12),
-
-
               Obx(() {
                 final apod = controller.apod.value;
                 return Text(
