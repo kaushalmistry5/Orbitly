@@ -157,7 +157,6 @@ class ApodFragment extends StatelessWidget {
               const SizedBox(height: 12),
 
 
-              // TITLE
               Obx(() {
                 final apod = controller.apod.value;
                 return Text(
@@ -261,8 +260,6 @@ String _monthName(int month) {
   ];
   return months[month - 1];
 }
-
-
 
 String _cleanDescription(String? description) {
   if (description == null || description.trim().isEmpty) {
