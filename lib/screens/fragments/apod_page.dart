@@ -169,7 +169,6 @@ class ApodFragment extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // META
               Text(
                 'Date: ${_formatDate(controller.apod.value?.date)}',
                 style: GoogleFonts.poppins(
